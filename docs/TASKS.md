@@ -16,13 +16,13 @@ Work top to bottom. Tick `[x]` when done. Do not start a phase until the previou
 - [ ] FastAPI project, `requirements.txt`, `config.py` reading env vars, `.env.example`.
 - [ ] `GET /health`.
 - [ ] Header checks (`X-App-Token`, `X-Device-Id`) and a best-effort in-memory daily rate limiter.
-- [ ] `gemini.py`: one function that sends system instruction + content and returns JSON validated against a Pydantic model, with one retry.
-- [ ] Pydantic models from `API_CONTRACT.md` with the quiz validators.
-- [ ] Prompt builders from `PROMPTS.md`.
-- [ ] `POST /chat`, `POST /quiz`, `POST /speaking/prompt`, `POST /speaking/feedback`.
-- [ ] Standard error format and handlers (`unauthorized`, `rate_limited`, `bad_request`, `ai_unavailable`, `ai_invalid_output`).
-- [ ] Tests with a mocked Gemini client for each endpoint, including invalid-output and rate-limit cases.
-- [ ] `README` section in `backend/` with run instructions.
+- [x] `gemini.py`: one function that sends system instruction + content and returns JSON validated against a Pydantic model, with one retry.
+- [x] Pydantic models from `API_CONTRACT.md` with the quiz validators.
+- [x] Prompt builders from `PROMPTS.md`.
+- [x] `POST /chat`, `POST /quiz`, `POST /speaking/prompt`, `POST /speaking/feedback`.
+- [x] Standard error format and handlers (`unauthorized`, `rate_limited`, `bad_request`, `ai_unavailable`, `ai_invalid_output`).
+- [x] Tests with a mocked Gemini client for each endpoint, including invalid-output and rate-limit cases.
+- [x] `README` section in `backend/` with run instructions.
 
 **Done when:** all endpoints work locally with a real key (manual check with curl/Postman using the examples in `API_CONTRACT.md`), and tests pass.
 
