@@ -4,18 +4,18 @@ Work top to bottom. Tick `[x]` when done. Do not start a phase until the previou
 
 ## Phase 0 - Setup
 
-- [ ] **(owner)** Create a Gemini API key in Google AI Studio and keep it private.
-- [ ] **(owner)** Create a GitHub repo and a Vercel account (Hobby plan; sign up with GitHub).
-- [ ] Create the repo structure from `ARCHITECTURE.md` (`docs/`, `backend/`, `app/`), with `.gitignore` covering `.env`, build outputs, and IDE files.
-- [ ] Copy these docs into `docs/`.
+- [x] **(owner)** Create a Gemini API key in Google AI Studio and keep it private.
+- [x] **(owner)** Create a GitHub repo and a Vercel account (Hobby plan; sign up with GitHub).
+- [x] Create the repo structure from `ARCHITECTURE.md` (`docs/`, `backend/`, `app/`), with `.gitignore` covering `.env`, build outputs, and IDE files.
+- [x] Copy these docs into `docs/`.
 
 **Done when:** repo exists with the folder skeleton and no secrets committed.
 
 ## Phase 1 - Backend
 
-- [ ] FastAPI project, `requirements.txt`, `config.py` reading env vars, `.env.example`.
-- [ ] `GET /health`.
-- [ ] Header checks (`X-App-Token`, `X-Device-Id`) and a best-effort in-memory daily rate limiter.
+- [x] FastAPI project, `requirements.txt`, `config.py` reading env vars, `.env.example`.
+- [x] `GET /health`.
+- [x] Header checks (`X-App-Token`, `X-Device-Id`) and a best-effort in-memory daily rate limiter.
 - [x] `gemini.py`: one function that sends system instruction + content and returns JSON validated against a Pydantic model, with one retry.
 - [x] Pydantic models from `API_CONTRACT.md` with the quiz validators.
 - [x] Prompt builders from `PROMPTS.md`.
