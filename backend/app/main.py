@@ -4,6 +4,8 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+from .routers import chat, quiz, speaking
+
 app = FastAPI(title="English Tutor MVP Backend")
 
 app.add_middleware(
@@ -13,6 +15,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(chat.router)
+app.include_router(quiz.router)
+app.include_router(speaking.router)
 
 @app.exception_handler(StarletteHTTPException)
 async def http_exception_handler(request: Request, exc: StarletteHTTPException):
