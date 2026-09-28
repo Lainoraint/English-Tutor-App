@@ -3,7 +3,7 @@
 ## Overview
 
 ```
-Flutter app (Android)  --HTTPS-->  FastAPI backend (Render free)  --API-->  Gemini
+Flutter app (Android)  --HTTPS-->  FastAPI backend (Vercel Hobby)  --API-->  Gemini
    - UI, STT (on-device)             - holds GEMINI_API_KEY
    - local settings                  - builds prompts, validates JSON
                                      - per-device rate limit
@@ -23,7 +23,7 @@ english-tutor/
       models.py         <- Pydantic request/response models (mirror API_CONTRACT.md)
       gemini.py         <- single place that calls Gemini (structured JSON output)
       prompts.py        <- prompt builders (see PROMPTS.md)
-      ratelimit.py      <- in-memory per-device daily counter
+      ratelimit.py      <- best-effort per-device daily counter (in memory)
       routers/
         chat.py
         quiz.py
@@ -31,7 +31,8 @@ english-tutor/
     tests/
     requirements.txt
     .env.example
-    render.yaml         <- optional Render blueprint
+    index.py            <- thin entrypoint shim if needed so Vercel finds the FastAPI `app` (see Vercel FastAPI docs)
+    vercel.json         <- optional (routing/region), only if needed; prefer zero-config
   app/                  <- Flutter project
     lib/
       main.dart
@@ -55,8 +56,8 @@ english-tutor/
 
 | Name | Purpose | Example |
 |---|---|---|
-| `GEMINI_API_KEY` | Gemini key (secret) | set on Render only |
-| `GEMINI_MODEL` | Model id, default a current Flash-Lite model | check AI Studio |
+| `GEMINI_API_KEY` | Gemini key (secret) | set in Vercel project settings only |
+| `GEMINI_MODEL` | Model id | `gemini-3.5-flash-lite` |
 | `DAILY_LIMIT` | Max AI requests per device per day | `60` |
 | `APP_TOKEN` | Shared token the app sends in `X-App-Token` | random string |
 
@@ -69,9 +70,19 @@ english-tutor/
 5. Validate the output. If invalid, retry **once**; if still invalid, return a 502 with the error format below.
 6. Return the validated JSON.
 
-The rate limiter is in memory. It resets when the free instance restarts; that is acceptable for the MVP.
+The rate limiter is in memory. On Vercel (serverless) instances are created and destroyed freely and are not shared, so the counter is only best-effort; that is acceptable for the MVP. The real safeguard is Gemini's own free-tier quota: when it is exhausted, return `ai_unavailable` and let the app show a friendly message.
 
 `APP_TOKEN` is only a light deterrent (it can be extracted from the APK). It is not real authentication. Real protection is the rate limit and Gemini's own quotas.
+
+### Hosting on Vercel (Hobby)
+
+- Deploy from the GitHub repo with the project **Root Directory set to `backend`**. Vercel auto-detects FastAPI from `requirements.txt` and runs the app as serverless functions. Follow the current official guide: https://vercel.com/docs/frameworks/backend/fastapi and https://vercel.com/docs/functions/runtimes/python (check them for the supported entrypoint locations and how to pin the Python version; do not rely on old blog posts that use the legacy `builds` config in `vercel.json`).
+- The FastAPI instance must be named `app`. Because our app lives in `backend/app/main.py`, either add a small `backend/index.py` (`from app.main import app`) or set the entrypoint as documented. Verify with `vercel dev` locally before deploying.
+- Do not run background threads, schedulers, or anything that assumes a long-lived process.
+- Keep the dependency list minimal to keep the function bundle small.
+- Hobby limits to respect: about 60 s max function duration, and monthly usage caps (invocations, active CPU). Waiting on Gemini does not count as active CPU according to Vercel's docs, but check the Usage dashboard during testing.
+- Hobby plan is personal, non-commercial only. See `README.md`.
+- Optional: choose a function region closer to Indonesia (e.g. Singapore) if the plan allows it; verify in Vercel's docs.
 
 ### Error format (all endpoints)
 
@@ -121,11 +132,11 @@ No other persistence in the MVP.
 ### Networking
 
 - Base URL comes from a build-time constant (`--dart-define=API_BASE_URL=...`).
-- On app start, fire a background `GET /health` to wake the server.
+- On app start, fire a background `GET /health` to warm up the function.
 - Timeout 60 s. On timeout or network error show a retry button.
 
 ## Security summary
 
-- API key only on the backend (Render environment variable).
+- API key only on the backend (Vercel environment variable, set for the Production environment).
 - Repo must contain `.env.example` only; `.env` is in `.gitignore`.
 - Play Store release will require a privacy policy. Note: Gemini free-tier data may be used by Google to improve its products; mention AI processing of user text in the privacy policy.

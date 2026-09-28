@@ -26,14 +26,14 @@ You are building the English Tutor MVP described in `README.md`. Follow these ru
 **Backend (Python)**
 - Python 3.11+, FastAPI, Pydantic v2, `uvicorn`.
 - Use the official Google Gen AI Python SDK. Check its **current** documentation for the correct package name, client setup, and structured-output (JSON schema) usage before writing code.
-- Type hints everywhere. Small modules, no global mutable state except the in-memory rate limiter.
+- Type hints everywhere. Small modules, no global mutable state except the best-effort in-memory rate limiter. The backend runs as a **serverless function on Vercel**: no background threads, no reliance on local disk or long-lived state.
 - Config through environment variables only.
 
 **Flutter (Dart)**
 - Null safety, `flutter_riverpod` for state, `speech_to_text` for the mic, `http` (or `dio`) for API calls, `shared_preferences` for settings.
 - Feature-first folder layout (see `ARCHITECTURE.md`).
 - All API calls go through one `ApiClient` class. Widgets never call HTTP directly.
-- Every screen handles three states: loading, error (with retry), and success. Use a longer timeout (60 s) and a "Waking up the server..." message because the free backend may be asleep.
+- Every screen handles three states: loading, error (with retry), and success. Use a longer timeout (60 s) and a "Connecting to the server..." message because the serverless backend may have cold starts.
 - Keep UI clean and simple: Material 3, light and dark theme following the system.
 
 ## Testing expectations

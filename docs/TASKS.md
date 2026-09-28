@@ -4,18 +4,18 @@ Work top to bottom. Tick `[x]` when done. Do not start a phase until the previou
 
 ## Phase 0 - Setup
 
-- [x] **(owner)** Create a Gemini API key in Google AI Studio and keep it private.
-- [x] **(owner)** Create a GitHub repo and a Render account (no credit card needed for the free tier).
-- [x] Create the repo structure from `ARCHITECTURE.md` (`docs/`, `backend/`, `app/`), with `.gitignore` covering `.env`, build outputs, and IDE files.
-- [x] Copy these docs into `docs/`.
+- [ ] **(owner)** Create a Gemini API key in Google AI Studio and keep it private.
+- [ ] **(owner)** Create a GitHub repo and a Vercel account (Hobby plan; sign up with GitHub).
+- [ ] Create the repo structure from `ARCHITECTURE.md` (`docs/`, `backend/`, `app/`), with `.gitignore` covering `.env`, build outputs, and IDE files.
+- [ ] Copy these docs into `docs/`.
 
 **Done when:** repo exists with the folder skeleton and no secrets committed.
 
 ## Phase 1 - Backend
 
-- [x] FastAPI project, `requirements.txt`, `config.py` reading env vars, `.env.example`.
-- [x] `GET /health`.
-- [x] Header checks (`X-App-Token`, `X-Device-Id`) and in-memory daily rate limiter.
+- [ ] FastAPI project, `requirements.txt`, `config.py` reading env vars, `.env.example`.
+- [ ] `GET /health`.
+- [ ] Header checks (`X-App-Token`, `X-Device-Id`) and a best-effort in-memory daily rate limiter.
 - [ ] `gemini.py`: one function that sends system instruction + content and returns JSON validated against a Pydantic model, with one retry.
 - [ ] Pydantic models from `API_CONTRACT.md` with the quiz validators.
 - [ ] Prompt builders from `PROMPTS.md`.
@@ -28,11 +28,12 @@ Work top to bottom. Tick `[x]` when done. Do not start a phase until the previou
 
 ## Phase 2 - Deploy backend
 
-- [ ] Add Render config (`render.yaml` or documented dashboard settings): start command with uvicorn, Python version, environment variables.
-- [ ] **(owner)** Connect the repo on Render, set `GEMINI_API_KEY`, `GEMINI_MODEL`, `DAILY_LIMIT`, `APP_TOKEN`.
+- [ ] Make the backend deployable on Vercel per the official FastAPI guide (see `ARCHITECTURE.md`, "Hosting on Vercel"): entrypoint that exposes `app`, `requirements.txt`, Python version pinned as documented. Verify locally with `vercel dev`.
+- [ ] **(owner)** Import the GitHub repo in Vercel, set **Root Directory** to `backend`, add environment variables `GEMINI_API_KEY`, `GEMINI_MODEL` (`gemini-3.5-flash-lite`), `DAILY_LIMIT`, `APP_TOKEN` for the Production environment, then deploy.
+- [ ] Note any cold-start delay and confirm the 60 s limit is not hit by `/quiz` (10 questions).
 - [ ] Verify `/health` and one AI endpoint on the deployed URL. Note the cold-start delay.
 
-**Done when:** the public Render URL answers `/chat` correctly.
+**Done when:** the public Vercel URL answers `/health` and `/chat` correctly.
 
 ## Phase 3 - Flutter foundation
 
@@ -44,7 +45,7 @@ Work top to bottom. Tick `[x]` when done. Do not start a phase until the previou
 - [ ] Onboarding (3 steps) shown only on first launch.
 - [ ] Home screen with three cards and a settings icon; Settings screen to change the three values.
 - [ ] Background `GET /health` on app start.
-- [ ] Shared widgets: loading indicator with "Waking up the server..." message after a few seconds, error view with retry.
+- [ ] Shared widgets: loading indicator with a "Connecting to the server..." message after a few seconds, error view with retry.
 
 **Done when:** the app runs on an Android device/emulator, onboarding saves values, and the home screen navigates to placeholder screens.
 

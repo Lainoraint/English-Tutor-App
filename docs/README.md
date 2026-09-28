@@ -22,7 +22,8 @@ Indonesian students and university students preparing for TOEFL/IELTS, up to wor
 ## Platform and stack
 
 - **Mobile:** Flutter, **Android only for now** (iOS postponed). End goal: release on Google Play Store.
-- **Backend:** Python FastAPI, hosted on **Render free tier** (no credit card). The free tier sleeps after inactivity, so the first request can take 30-50 s. The app must show a friendly "Waking up the server..." state.
+- **Backend:** Python FastAPI, hosted on **Vercel Hobby (free)** as a serverless Python function (deploys from GitHub, no Dockerfile). Reported to need no credit card (owner to confirm at signup). Cold starts are possible, so the app must show a friendly "Connecting to the server..." state. **Important:** the Hobby plan is for personal, non-commercial use only; if the app is monetized, hosting must move to a paid plan or another provider (decide at release time). Function duration on Hobby is capped (about 60 s), which is enough for our Gemini calls.
+- **Fallback hosting:** Hugging Face Spaces (Docker, port 7860, public repo) if Vercel does not work out. Render was rejected because it asked for a credit card at deploy time.
 - **AI:** Google Gemini via the Gemini API. The API key lives **only** on the backend, never in the app.
 - **Speech-to-text:** on-device engine (Flutter `speech_to_text` package). Audio is never sent to the backend.
 - **Cost goal:** zero running cost except the Google Play developer fee. Use a Flash-Lite class Gemini model by default to stay within free-tier quotas.
@@ -107,10 +108,10 @@ The owner can change any of these; ask before changing them yourself.
 - State management: `flutter_riverpod`.
 - Conversation history is kept **in memory only** during a session.
 - Settings (goal, level, explanation language) are stored locally with `shared_preferences`.
-- Backend rate limit default: 60 AI requests per device per day (configurable by env var).
+- Backend rate limit default: 60 AI requests per device per day (configurable by env var). On serverless hosting the counter is best-effort only (not shared between instances); the real safeguard is Gemini's own free-tier quota.
 - Quiz round length: 10 questions per round.
 - Speaking scores use a 0-10 scale for grammar, vocabulary, and coherence.
-- Default Gemini model is set by env var `GEMINI_MODEL`; choose a current Flash-Lite model that is available on the free tier (check Google AI Studio).
+- Gemini model is set by env var `GEMINI_MODEL`, default `gemini-3.5-flash-lite` (chosen from Google's model list; Google recommends 3.5 Flash-Lite or 3.8 Flash for new projects, and 2.5 models are restricted for new users). Free-tier quota is per project; verify current limits in Google AI Studio.
 
 ## Decision log
 
@@ -121,5 +122,5 @@ The owner can change any of these; ask before changing them yourself.
 - Speaking uses the built-in on-device speech-to-text for now.
 - Vocabulary Quiz v1: AI freely generates questions from level and goal.
 - Quick topics are a fixed list following the goal.
-- Hosting: Render free tier, FastAPI proxy holds the Gemini key.
+- Hosting: Vercel Hobby (free, no card), FastAPI proxy holds the Gemini key. Render was dropped because it required a credit card at deploy; Hugging Face Spaces is the fallback.
 - Keep everything MVP-simple.
