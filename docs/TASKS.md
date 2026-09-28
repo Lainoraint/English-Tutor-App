@@ -28,24 +28,24 @@ Work top to bottom. Tick `[x]` when done. Do not start a phase until the previou
 
 ## Phase 2 - Deploy backend
 
-- [ ] Make the backend deployable on Vercel per the official FastAPI guide (see `ARCHITECTURE.md`, "Hosting on Vercel"): entrypoint that exposes `app`, `requirements.txt`, Python version pinned as documented. Verify locally with `vercel dev`.
-- [ ] **(owner)** Import the GitHub repo in Vercel, set **Root Directory** to `backend`, add environment variables `GEMINI_API_KEY`, `GEMINI_MODEL` (`gemini-3.5-flash-lite`), `DAILY_LIMIT`, `APP_TOKEN` for the Production environment, then deploy.
-- [ ] Note any cold-start delay and confirm the 60 s limit is not hit by `/quiz` (10 questions).
-- [ ] Verify `/health` and one AI endpoint on the deployed URL. Note the cold-start delay.
+- [x] Make the backend deployable on Vercel per the official FastAPI guide (see `ARCHITECTURE.md`, "Hosting on Vercel"): entrypoint that exposes `app`, `requirements.txt`, Python version pinned as documented. Verify locally with `vercel dev`.
+- [x] **(owner)** Import the GitHub repo in Vercel, set **Root Directory** to `backend`, add environment variables `GEMINI_API_KEY`, `GEMINI_MODEL` (`gemini-3.5-flash-lite`), `DAILY_LIMIT`, `APP_TOKEN` for the Production environment, then deploy.
+- [x] Note any cold-start delay and confirm the 60 s limit is not hit by `/quiz` (10 questions).
+- [x] Verify `/health` and one AI endpoint on the deployed URL. Note the cold-start delay.
 
 **Done when:** the public Vercel URL answers `/health` and `/chat` correctly.
 
 ## Phase 3 - Flutter foundation
 
-- [ ] Create the Flutter project (Android target), Material 3 light/dark theme.
-- [ ] `flutter_riverpod`, `shared_preferences`, `speech_to_text`, `http` (or `dio`) added.
-- [ ] `ApiClient` with base URL from `--dart-define`, headers, 60 s timeout, error mapping to the contract error codes.
-- [ ] Dart models mirroring `API_CONTRACT.md`, with unit tests that parse the example JSON.
-- [ ] Settings store (goal, level, explanation language, device id).
-- [ ] Onboarding (3 steps) shown only on first launch.
-- [ ] Home screen with three cards and a settings icon; Settings screen to change the three values.
-- [ ] Background `GET /health` on app start.
-- [ ] Shared widgets: loading indicator with a "Connecting to the server..." message after a few seconds, error view with retry.
+- [x] Create the Flutter project (Android target), Material 3 light/dark theme.
+- [x] `flutter_riverpod`, `shared_preferences`, `speech_to_text`, `http` (or `dio`) added.
+- [x] `ApiClient` with base URL from `--dart-define`, headers, 60 s timeout, error mapping to the contract error codes.
+- [x] Dart models mirroring `API_CONTRACT.md`, with unit tests that parse the example JSON.
+- [x] Settings store (goal, level, explanation language, device id).
+- [x] Onboarding (3 steps) shown only on first launch.
+- [x] Home screen with three cards and a settings icon; Settings screen to change the three values.
+- [x] Background `GET /health` on app start.
+- [x] Shared widgets: loading indicator with a "Connecting to the server..." message after a few seconds, error view with retry.
 
 **Done when:** the app runs on an Android device/emulator, onboarding saves values, and the home screen navigates to placeholder screens.
 
