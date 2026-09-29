@@ -33,10 +33,12 @@ class SettingsState {
   }
 }
 
-class SettingsNotifier extends StateNotifier<SettingsState> {
-  final SharedPreferences prefs;
-
-  SettingsNotifier(this.prefs) : super(_loadInitialState(prefs));
+class SettingsNotifier extends Notifier<SettingsState> {
+  @override
+  SettingsState build() {
+    final prefs = ref.watch(sharedPreferencesProvider);
+    return _loadInitialState(prefs);
+  }
 
   static SettingsState _loadInitialState(SharedPreferences prefs) {
     String? deviceId = prefs.getString('device_id');
@@ -54,6 +56,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
   }
 
   Future<void> updateSettings({String? goal, String? level, String? explanationLanguage}) async {
+    final prefs = ref.read(sharedPreferencesProvider);
     if (goal != null) await prefs.setString('goal', goal);
     if (level != null) await prefs.setString('level', level);
     if (explanationLanguage != null) await prefs.setString('explanation_language', explanationLanguage);
@@ -66,6 +69,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
   }
 
   bool get isOnboardingComplete {
+    final prefs = ref.read(sharedPreferencesProvider);
     return prefs.containsKey('goal') && prefs.containsKey('level') && prefs.containsKey('explanation_language');
   }
 
@@ -74,7 +78,4 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
   }
 }
 
-final settingsProvider = StateNotifierProvider<SettingsNotifier, SettingsState>((ref) {
-  final prefs = ref.watch(sharedPreferencesProvider);
-  return SettingsNotifier(prefs);
-});
+final settingsProvider = NotifierProvider<SettingsNotifier, SettingsState>(SettingsNotifier.new);
