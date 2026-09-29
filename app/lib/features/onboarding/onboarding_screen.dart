@@ -60,13 +60,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             const Spacer(),
             ElevatedButton(
               onPressed: () async {
+                final navigator = Navigator.of(context);
                 await ref.read(settingsProvider.notifier).completeOnboarding(
                   goal: _goal,
                   level: _level,
                   explanationLanguage: _lang,
                 );
                 if (mounted) {
-                  Navigator.of(context).pushReplacement(
+                  navigator.pushReplacement(
                     MaterialPageRoute(builder: (_) => const HomeScreen()),
                   );
                 }
