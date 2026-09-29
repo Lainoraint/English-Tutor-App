@@ -26,10 +26,11 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final settingsState = ref.watch(settingsProvider);
     final settingsNotifier = ref.watch(settingsProvider.notifier);
     
     // Background health check
-    final client = ApiClient(deviceId: settingsNotifier.state.deviceId);
+    final client = ApiClient(deviceId: settingsState.deviceId);
     client.healthCheck();
 
     return MaterialApp(
