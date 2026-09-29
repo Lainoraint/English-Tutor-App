@@ -31,6 +31,7 @@ You are building the English Tutor MVP described in `README.md`. Follow these ru
 
 **Flutter (Dart)**
 - Null safety, `flutter_riverpod` for state, `speech_to_text` for the mic, `http` (or `dio`) for API calls, `shared_preferences` for settings.
+- Use Riverpod 3 APIs: Notifier / AsyncNotifier / NotifierProvider. Do not use StateNotifier, StateNotifierProvider, or StateProvider (they live in flutter_riverpod/legacy.dart).
 - Feature-first folder layout (see `ARCHITECTURE.md`).
 - All API calls go through one `ApiClient` class. Widgets never call HTTP directly.
 - Every screen handles three states: loading, error (with retry), and success. Use a longer timeout (60 s) and a "Connecting to the server..." message because the serverless backend may have cold starts.
